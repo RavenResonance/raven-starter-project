@@ -8,13 +8,22 @@ For detailed documentation, component reference, and API details, see the [Raven
 
 ## Start your first project
 
-**Step 1:** Make sure you have Python 3.10 or higher installed. Download and install from the [official Python website](https://www.python.org/downloads/) if needed. You also need Git to get the Raven Framework (this makes it easy to update later).
+**Step 1:** Make sure you have the following installed:
+- **Python 3.10 or higher** - Download and install from the [official Python website](https://www.python.org/downloads/) if needed
+- **Git** - Required to get the Raven Framework (this makes it easy to update later)
 
 To check your Python version, run `python --version` or `python3 --version`. To upgrade Python, download the latest version from the [official Python website](https://www.python.org/downloads/) and install it.
 
 **Step 2:** Open a terminal: macOS (Press `Cmd + Space`, type "Terminal", and press Enter), Windows (Press `Win + R`, type `cmd`, and press Enter), or Linux (Press `Ctrl + Alt + T`).
 
-**Step 3 (optional but highly recommended):** Create a virtual environment:
+**Step 3:** Clone this starter project:
+
+```bash
+git clone https://github.com/RavenResonance/raven-starter-project.git
+cd raven-starter-project
+```
+
+**Step 4:** Create a virtual environment:
 
 ```bash
 python -m venv raven-app-venv
@@ -22,18 +31,11 @@ python -m venv raven-app-venv
 
 **Note:** Use `python3` instead of `python` if needed on your system.
 
-Activate it:
+**Step 5:** Activate the virtual environment:
 - **macOS/Linux:** `source raven-app-venv/bin/activate`
 - **Windows:** `raven-app-venv\Scripts\activate`
 
-**Step 4:** Clone this starter project:
-
-```bash
-git clone https://github.com/RavenResonance/raven-starter-project.git
-cd raven-starter-project
-```
-
-**Step 5:** Clone the Raven Framework and install it:
+**Step 6:** Clone the Raven Framework and install it:
 
 ```bash
 git clone https://github.com/RavenResonance/raven-framework.git 
@@ -44,7 +46,7 @@ cd ..
 
 **Note:** You might need to use `pip3 install -e .` instead of `pip install -e .` depending on your system.
 
-**Step 6:** Try the Hello World example:
+**Step 7:** Try the Hello World example:
 
 ```bash
 python main.py
@@ -54,7 +56,7 @@ Or `python3 main.py` depending on your system.
 
 Now open the project in your editor of your choice like [VS Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/).
 
-**Step 7:** Know what you are seeing:
+**Step 8:** Know what you are seeing:
 
 - **Your cursor simulates eye gaze**: When you move your mouse cursor, it represents where you're looking with your eyes on the actual glasses. The framework tracks this gaze position to interact with UI elements.
 - **Click simulates interaction methods**: Clicking with your mouse simulates the actual interaction methods used on glasses, such as double blink or dwell-to-click (gazing at an element for a set duration).
@@ -63,7 +65,7 @@ Now open the project in your editor of your choice like [VS Code](https://code.v
 - **Closing windows**: You can close (X out of) either the main app window or the simulator window at any time. You can also move them around by dragging.
 - **Exiting the app**: You can also click the home icon in the top right corner of the app window to exit and return to the home screen.
 
-**Step 8:** Know the code:
+**Step 9:** Know the code:
 
 Key concepts:
 - Define a class that inherits from `RavenApp` - this is required for all Raven applications
@@ -157,13 +159,13 @@ if __name__ == "__main__":
     RunApp.run(lambda: MyApp(), app_id="", app_key="")
 ```
 
-**Step 9:** Explore the [example applications](#example-applications) to see more complex implementations.
+**Step 10:** Explore the [example applications](#example-applications) to see more complex implementations.
 
-**Step 10:** You can skim through the [full Raven Framework documentation](https://github.com/RavenResonance/raven-framework) to understand all available components and features.
+**Step 11:** You can skim through the [full Raven Framework documentation](https://github.com/RavenResonance/raven-framework) to understand all available components and features.
 
-**Step 11:** Building apps with AI: The Raven Framework repository includes an `AGENTS.md` file that contains condensed documentation optimized for AI assistants. Coding tools like Cursor and Copilot should automatically see this as a README and use it for context. You can also copy this file and provide it to AI assistants (like ChatGPT, Claude, or Gemini) to help you build Raven applications. The AI will have all the framework information it needs to generate code and answer questions about components, sensors, and utilities. [Learn more about AGENTS.md](https://agents.md/).
+**Step 12:** Building apps with AI: The Raven Framework repository includes an `AGENTS.md` file that contains condensed documentation optimized for AI assistants. Coding tools like Cursor and Copilot should automatically see this as a README and use it for context. You can also copy this file and provide it to AI assistants (like ChatGPT, Claude, or Gemini) to help you build Raven applications. The AI will have all the framework information it needs to generate code and answer questions about components, sensors, and utilities. [Learn more about AGENTS.md](https://agents.md/).
 
-**Step 12:** Start building your own Raven application in `main.py` in the root directory!
+**Step 13:** Start building your own Raven application in `main.py` in the root directory!
 
 ## Example Applications
 
