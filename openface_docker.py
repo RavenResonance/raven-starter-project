@@ -1,15 +1,51 @@
 """
-Helper script to run OpenFace via Docker
+Helper script to run OpenFace via Docker (optimized)
 """
 
 import subprocess
 import os
 import tempfile
+import hashlib
+from functools import lru_cache
+
+
+# Cache OpenFace results for identical frames
+@lru_cache(maxsize=32)
+def _cached_openface_run(image_hash, image_path, output_dir):
+    """Cached OpenFace execution"""
+    abs_image_path = os.path.abspath(image_path)
+    abs_output_dir = os.path.abspath(output_dir)
+
+    cmd = [
+        "docker", "run", "--rm",
+        "-v", f"{abs_image_path}:/input.jpg:ro",
+        "-v", f"{abs_output_dir}:/output",
+        "algebr/openface:latest",
+        "/home/openface-build/build/bin/FeatureExtraction",
+        "-f", "/input.jpg",
+        "-out_dir", "/output",
+        "-quiet"
+    ]
+
+    result = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False
+    )
+
+    return {
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+        "output_dir": output_dir,
+        "returncode": result.returncode
+    }
 
 
 def run_openface_docker(image_path, output_dir=None):
     """
-    Run OpenFace Docker container on an image file
+    Run OpenFace Docker container on an image file (optimized with caching)
 
     Args:
         image_path: Path to input image
@@ -21,6 +57,17 @@ def run_openface_docker(image_path, output_dir=None):
     if output_dir is None:
         output_dir = tempfile.mkdtemp()
 
+    # Create hash of image for caching
+    try:
+        with open(image_path, 'rb') as f:
+            image_hash = hashlib.md5(f.read()).hexdigest()
+    except Exception:
+        image_hash = None
+
+    if image_hash:
+        return _cached_openface_run(image_hash, image_path, output_dir)
+
+    # Fallback without caching
     abs_image_path = os.path.abspath(image_path)
     abs_output_dir = os.path.abspath(output_dir)
 
@@ -31,10 +78,11 @@ def run_openface_docker(image_path, output_dir=None):
         "algebr/openface:latest",
         "/home/openface-build/build/bin/FeatureExtraction",
         "-f", "/input.jpg",
-        "-out_dir", "/output"
+        "-out_dir", "/output",
+        "-quiet"
     ]
 
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=5, check=False)
 
     return {
         "stdout": result.stdout,
