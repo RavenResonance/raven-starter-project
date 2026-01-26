@@ -1,11 +1,12 @@
 # AGENTS.md - Raven Framework
 
-This file provides comprehensive documentation for AI coding agents working with the Raven Framework. It contains all essential information about components, APIs, patterns, and best practices for building gaze-based applications for Raven Glass.
+This file provides comprehensive documentation for AI coding agents working with the Raven Framework. It contains all essential information about components, API, patterns, and best practices for building gaze-based applications for Raven Glass.
 
 ## Project Overview
 
-Raven Framework is a comprehensive UI framework and APIs for building gaze-based applications for Raven Glass. It provides:
-- Gaze-based interaction (buttons, scrolling with eyes, voice input)
+Raven Framework is a comprehensive UI framework and API for building gaze-based applications for Raven Glass. It provides:
+- Gaze-based interactions (buttons, scrolling with eyes)
+- Voice input
 - Extensive sensor suite (eye tracking, cameras, IMUs, microphones)
 - Modern UI components built on Python
 - Media handling and AI integration
@@ -18,7 +19,7 @@ We are Raven Resonance, a small team building AR glasses for all-day wear. [Rave
 ## Installation & Setup
 
 ### Prerequisites
-- Python 3.12 or higher
+- Python 3.10 or higher
 - Git (for cloning the framework)
 
 ### Installation Steps
@@ -31,6 +32,12 @@ pip install -e .
 ```
 
 **Note:** Use `pip3 install -e .` instead of `pip install -e .` depending on your system.
+
+**Try installing audio simulator support (recommended):**
+```bash
+pip install -e ".[audio-simulator]"
+```
+This installs `simpleaudio` for audio playback in simulator mode. Note that `simpleaudio` may not have pre-built binaries available for all Linux and Windows systems, which can cause installation to fail. If installation fails, don't worry - the framework will work without it, but audio playback won't be available in simulator mode (it will still work on Raven devices).
 
 2. **Optional: Create a virtual environment:**
 ```bash
@@ -87,8 +94,8 @@ from raven_framework.core.run_app import RunApp
 if __name__ == "__main__":
     RunApp.run(
         lambda: MyApp(),
-        app_id="",  # Empty for simulator, required for deployment
-        app_key=""  # Empty for simulator, required for deployment
+        app_id="",
+        app_key=""
     )
 ```
 
@@ -101,6 +108,8 @@ if __name__ == "__main__":
 - You can add elements like buttons and text boxes to containers
 
 ## UI Widgets
+
+**Note:** All components inherit from PySide6's `QWidget` class, so standard Qt methods like `hide()`, `show()`, `move()`, `resize()`, etc. are still available and work as expected.
 
 ### Layout Components
 
@@ -116,6 +125,9 @@ container = Container()
 
 # With fixed size
 container = Container(width=640, height=640)
+
+# With spacing
+container = Container(spacing=10)
 
 # With margins (uniform)
 container = Container(inner_margin=20)
@@ -135,7 +147,7 @@ container.add(text_box, x=100, y=200)  # With absolute positioning
 
 **Key methods:** `add(widget, x=None, y=None)`, `clear()`
 
-**Note:** Use `is_main_container=True` to inherit system themes (borders, positioning, sizing, fonts).
+**Note:** Use `is_main_container=True` to inherit system themes (borders, positioning, sizing, fonts). For the main container of pages, it is recommended to always use `is_main_container=True` and `spacing=10`.
 
 #### VerticalContainer
 
@@ -144,13 +156,16 @@ Vertical layout container with automatic widget arrangement.
 ```python
 from raven_framework.components.vertical_container import VerticalContainer
 
-vbox = VerticalContainer(width=640)
+vbox = VerticalContainer(width=640, spacing=10)
+# Prefer adding all widgets together in one .add() call
 vbox.add(button1, button2, text_box)  # Stacks vertically
 ```
 
 **Key params:** Same as Container
 
 **Key methods:** `add(*widgets)`, `clear()`
+
+**Note:** For the main container of pages, it is recommended to always use `is_main_container=True` and `spacing=10`. Prefer adding all widgets together in one `.add()` call instead of separate add functions.
 
 #### HorizontalContainer
 
@@ -159,13 +174,16 @@ Horizontal layout container for side-by-side arrangement.
 ```python
 from raven_framework.components.horizontal_container import HorizontalContainer
 
-hbox = HorizontalContainer(width=640)
+hbox = HorizontalContainer(width=640, spacing=10)
+# Prefer adding all widgets together in one .add() call
 hbox.add(icon1, icon2, icon3)  # Stacks horizontally
 ```
 
 **Key params:** Same as Container
 
 **Key methods:** `add(*widgets)`, `clear()`
+
+**Note:** For the main container of pages, it is recommended to always use `is_main_container=True` and `spacing=10`. Prefer adding all widgets together in one `.add()` call instead of separate add functions.
 
 ### UI Components
 
@@ -199,6 +217,8 @@ text = TextBox(text="Small Text", font_type="small")
 
 **Note:** By default uses body font from theme. `font_type` applies theme's color, family, size, and weight automatically.
 
+**Important:** Do not call `set_text()` on a TextBox after it has been destroyed, otherwise you'll get C++ binding errors. Always check if the widget still exists before updating text.
+
 #### Button
 
 Customizable button with dwell-to-click and scaling animations.
@@ -208,6 +228,9 @@ from raven_framework.components.button import Button
 
 # Simple button
 button = Button(center_text="Click Me")
+
+# Note: Buttons automatically adjust width and height based on text content.
+# Only add width and height if absolutely needed.
 
 # With custom size
 button = Button(center_text="Click Me", width=150, height=60)
@@ -235,6 +258,8 @@ def on_button_click(self, new_text):
 **Key params:** `width`, `height`, `background_color` (hex), `text_size`, `text_color` (hex), `font_weight`, `corner_radius`, `outline_width`, `outline_color`, `dwell_time`, `icon_path`, `disabled`
 
 **Key methods:** `set_text(new_text: str)`, `on_clicked(callback, *args, **kwargs)`, `set_disabled(disabled: bool)`, `set_enabled(enabled: bool)`, `is_disabled() -> bool`
+
+**Important:** Do not call `set_text()` on a Button after it has been destroyed, otherwise you'll get C++ binding errors. Always check if the widget still exists before updating text.
 
 #### Icon
 
@@ -329,6 +354,20 @@ scroll = ScrollView(content_widget=vbox, width=480, height=540, enable_continuou
 
 **Key methods:** `scroll_next()`, `scroll_prev()`, `start_auto_scroll()`, `stop_auto_scroll()`, `clear()`
 
+#### ModelViewer
+
+Displays 3D models from OBJ files with OpenGL rendering.
+
+```python
+from raven_framework.components.model_viewer import ModelViewer
+
+viewer = ModelViewer(model_path="assets/model.obj", width=400, height=400)
+```
+
+**Note:** Raven Glass only supports OpenGL ES 2.0, not Vulkan or OpenGL ES 3.x. The ModelViewer automatically uses the appropriate OpenGL context based on the platform.
+
+**Key params:** `model_path` (str), `width` (int), `height` (int)
+
 ### Cards
 
 Reusable card components with various layouts.
@@ -336,7 +375,7 @@ Reusable card components with various layouts.
 #### TextCardWithButton
 
 ```python
-from raven_framework.components.cards import TextCardWithButton
+from raven_framework.cards import TextCardWithButton
 
 card = TextCardWithButton(
     text="Card text",
@@ -349,7 +388,7 @@ card = TextCardWithButton(
 #### TextCardWithTwoButtons
 
 ```python
-from raven_framework.components.cards import TextCardWithTwoButtons
+from raven_framework.cards import TextCardWithTwoButtons
 
 card = TextCardWithTwoButtons(
     text="Card text",
@@ -364,7 +403,7 @@ card = TextCardWithTwoButtons(
 #### HorizontalTextCardWithButton
 
 ```python
-from raven_framework.components.cards import HorizontalTextCardWithButton
+from raven_framework.cards import HorizontalTextCardWithButton
 
 card = HorizontalTextCardWithButton(
     text="Card text",
@@ -377,7 +416,7 @@ card = HorizontalTextCardWithButton(
 #### HorizontalTextCard
 
 ```python
-from raven_framework.components.cards import HorizontalTextCard
+from raven_framework.cards import HorizontalTextCard
 
 card = HorizontalTextCard(
     text="Card text",
@@ -389,7 +428,7 @@ card = HorizontalTextCard(
 #### MediaCard
 
 ```python
-from raven_framework.components.cards import MediaCard
+from raven_framework.cards import MediaCard
 
 card = MediaCard(
     image_path="assets/image.png",
@@ -404,7 +443,7 @@ card = MediaCard(
 #### MediaCardWithButton
 
 ```python
-from raven_framework.components.cards import MediaCardWithButton
+from raven_framework.cards import MediaCardWithButton
 
 card = MediaCardWithButton(
     image_path="assets/image.png",
@@ -421,7 +460,7 @@ card = MediaCardWithButton(
 #### MediaCardWithTwoButtons
 
 ```python
-from raven_framework.components.cards import MediaCardWithTwoButtons
+from raven_framework.cards import MediaCardWithTwoButtons
 
 card = MediaCardWithTwoButtons(
     image_path="assets/image.png",
@@ -440,7 +479,7 @@ card = MediaCardWithTwoButtons(
 #### ScrollableListCard
 
 ```python
-from raven_framework.components.cards import ScrollableListCard
+from raven_framework.cards import ScrollableListCard
 
 card = ScrollableListCard(
     title_text="List Title",
@@ -494,7 +533,7 @@ level = mic.get_level()  # Returns float (0.0 to 1.0)
 
 ### IMU
 
-**Note:** Cannot be simulated in simulator mode.
+**Note:** In simulator mode, arrow keys can be used to simulate accelerometer readings. Use Up/Down arrow keys for Y-axis acceleration and Left/Right arrow keys for X-axis acceleration.
 
 ```python
 from raven_framework.peripherals.imu import IMU
@@ -527,6 +566,8 @@ if position:
 
 ### Speaker
 
+**Note:** In simulator mode, audio playback requires the `audio-simulator` optional dependency. Install it with `pip install -e ".[audio-simulator]"` or `pip install simpleaudio`. Note that `simpleaudio` may not have pre-built binaries available for all Linux and Windows systems, which can cause installation to fail. If `simpleaudio` is not available, the framework will log a warning and audio playback will not work in simulator mode (but will still work on Raven devices).
+
 ```python
 from raven_framework.peripherals.speaker import Speaker
 
@@ -555,6 +596,8 @@ pressed = button.wait_for_press(timeout=5.0)
 **Methods:**
 - `is_pressed() -> bool`
 - `wait_for_press(timeout: float = 5.0) -> bool`
+
+**Note:** Additional peripheral support, including spatial microphone and sound processing, and enhanced click button controls, will be added in future releases of the framework.
 
 ## Utilities
 
@@ -628,6 +671,8 @@ def on_complete(result):
 runner.run(long_task, on_complete=on_complete)
 ```
 
+**Important:** Do not update UI components (like buttons or text boxes) directly from background threads. Always update UI components in the `on_complete` callback, which runs on the main thread. Updating UI from separate threads can cause crashes or undefined behavior.
+
 **Methods:**
 - `run(func: Callable, on_complete: Callable | None = None) -> None`
 
@@ -660,6 +705,24 @@ audio_bytes = ai.generate_tts("Hello world", voice="alloy")
 - `get_text_response(prompt: str, model: str = "gpt-4o") -> str`
 - `process_multimodal_with_image(prompt: str, image: ndarray, model: str = "gpt-4o") -> str`
 - `generate_tts(text: str, model: str = "tts-1", voice: str = "alloy", response_format: str = "wav") -> bytes`
+
+## Hardware Specifications
+
+Raven Glass v1 hardware specifications:
+
+* **Operating System:** RavenOS (Linux-based)
+* **Processor:** Quad-core 64-bit ARM processor
+* **Graphics:** GPU with OpenGL ES 2.0 support
+* **Display:** 30 degree diagonal FoV, full-color waveguide display on the right eye
+* **Primary Input:** Eye control sensors
+* **Connectivity:** WiFi & Bluetooth
+* **Audio Input:** Multiple microphones
+* **Audio Output:** 2 downward-facing speakers
+* **Camera:** World-facing camera
+* **Motion Sensors:** IMU
+* **Power:** Raven Wings™ hot-swappable batteries
+* **Indicators:** Beakon™ lights
+* **Environmental Sensors:** Ambient light and proximity sensors
 
 ## Design Guidelines
 
@@ -799,7 +862,7 @@ class HelloWorld(RavenApp):
 if __name__ == "__main__":
     # Launch the app using RunApp.run()
     # lambda: HelloWorld() creates a new instance of the app
-    # app_id="" and app_key="" are empty for simulator mode
+    # app_id and app_key are required for deployment
     RunApp.run(lambda: HelloWorld(), app_id="", app_key="")
 ```
 
@@ -811,7 +874,7 @@ from enum import Enum
 
 # Raven Framework Imports
 from raven_framework import RavenApp, Routine, RunApp, themes, fade_in
-from raven_framework.components.cards import TextCardWithButton, TextCardWithTwoButtons
+from raven_framework.cards import TextCardWithButton, TextCardWithTwoButtons
 
 # Raven Framework Heavier Imports
 from raven_framework import MediaViewer
@@ -1015,7 +1078,7 @@ from raven_framework import (
     RunApp,
     themes,
 )
-from raven_framework.components.cards import ScrollableListCard
+from raven_framework.cards import ScrollableListCard
 
 # Raven Framework Heavier Imports
 from raven_framework import MediaViewer
@@ -1171,7 +1234,7 @@ if __name__ == "__main__":
 ```python
 # Import Raven Framework components
 from raven_framework import AsyncRunner, RavenApp, RunApp
-from raven_framework.components.cards import TextCardWithButton
+from raven_framework.cards import TextCardWithButton
 from raven_framework.helpers.open_ai_helper import OpenAiHelper
 from raven_framework.peripherals.camera import Camera
 from raven_framework.peripherals.microphone import Microphone
@@ -1357,7 +1420,7 @@ from raven_framework.helpers.async_runner import AsyncRunner
 from raven_framework.helpers.animation_utils import fade_in
 
 # Raven Framework cards
-from raven_framework.components.cards import TextCardWithButton
+from raven_framework.cards import TextCardWithButton
 
 # Raven Framework sensors (heavier imports)
 from raven_framework.peripherals.camera import Camera
@@ -1384,7 +1447,7 @@ from raven_framework.helpers.open_ai_helper import OpenAiHelper
 - Use `AsyncRunner` for heavy operations to avoid blocking UI
 - Initialize sensors lazily (only when needed)
 - Use `fade_in()` at end of `__init__` for smooth appearance
-- Always provide `app_id` and `app_key` for deployment (empty strings for simulator)
+- Always provide `app_id` and `app_key` for deployment
 
 ## Testing & Running
 
