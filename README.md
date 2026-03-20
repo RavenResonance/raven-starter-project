@@ -61,7 +61,7 @@ Now open the project in your editor of your choice like [VS Code](https://code.v
 - **Your cursor simulates eye gaze**: When you move your mouse cursor, it represents where you're looking with your eyes on the actual glasses. The framework tracks this gaze position to interact with UI elements.
 - **Click simulates interaction methods**: Clicking with your mouse simulates the actual interaction methods used on glasses, such as double blink or dwell-to-click (gazing at an element for a set duration).
 - **Black appears transparent**: Note that black colors appear transparent due to additive blending, which is how the waveguide display works. The display adds light to what you see in the real world, so pure black cannot be displayed. [Learn more about additive blending and color](https://github.com/RavenResonance/raven-framework/tree/main?tab=readme-ov-file#color--waveguide).
-- **Show Simulator button**: Click on "Show Simulator" to see a preview of how your app will look on the actual waveguide display, including the additive blending effects.
+- **Simulator Modes**: Click different simulator modes, like Day or Night, to see how the display looks on Raven Glass. Click Raw to see how the raw image is rendered.
 - **Closing windows**: You can close (X out of) either the main app window or the simulator window at any time. You can also move them around by dragging.
 - **Exiting the app**: You can also click the home icon in the top right corner of the app window to exit and return to the home screen.
 
