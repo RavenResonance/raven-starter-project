@@ -17,7 +17,7 @@ class HelloWorld(RavenApp):
         )
         # Create a text box with simulator information
         text_box = TextBox(
-            """Welcome to your first Raven app! This simulates how your app will look on Raven Glass. Your cursor simulates eye gaze, and your app's colors additively blend with the real world. Try clicking different modes to see how an app should look on the display.""",
+            """Welcome to your first Raven app! This simulates how your app will look on Raven Prism. Your cursor simulates eye gaze, and your app's colors additively blend with the real world. Try clicking different modes to see how an app should look on the display.""",
             width=640,
             alignment="left",
         )

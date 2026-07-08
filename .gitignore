@@ -216,3 +216,6 @@ raven-framework-internal
 
 # Compiled files
 *.rav
+
+.vscode/
+tmp/
