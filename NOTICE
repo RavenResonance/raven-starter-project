@@ -12,6 +12,6 @@ Raven Framework (separate dependency)
 -------------------------------------
 - **Scope:** The Raven Framework library, installed separately (e.g. via `pip install` from https://github.com/RavenResonance/raven-framework).
 - **License:** Proprietary — source available, not open source. See the [Raven Framework LICENSE](https://github.com/RavenResonance/raven-framework/blob/main/LICENSE).
-- **Restrictions:** Do not redistribute, modify, or publish Raven Framework code without explicit written permission from Raven Resonance, Inc.
+- **Restrictions:** Do not redistribute, modify, or publish Raven Framework code without explicit written permission from Raven Resonance Inc.
 
-Using the starter examples does not grant any rights to the Raven Framework beyond what Raven Resonance, Inc. expressly permits.
+Using the starter examples does not grant any rights to the Raven Framework beyond what Raven Resonance Inc. expressly permits.

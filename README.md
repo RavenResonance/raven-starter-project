@@ -319,6 +319,6 @@ Contributions are welcome! Feel free to submit issues or pull requests to improv
 
 This repository's example applications and documentation are licensed under the [MIT License](LICENSE).
 
-MIT applies to the starter examples and docs in this repo only. [Raven Framework](https://github.com/RavenResonance/raven-framework) is proprietary software, installed separately, and governed by its [own license](https://github.com/RavenResonance/raven-framework/blob/main/LICENSE). Do not redistribute or publish Raven Framework code without authorization from Raven Resonance, Inc.
+MIT applies to the starter examples and docs in this repo only. [Raven Framework](https://github.com/RavenResonance/raven-framework) is proprietary software, installed separately, and governed by its [own license](https://github.com/RavenResonance/raven-framework/blob/main/LICENSE). Do not redistribute or publish Raven Framework code without authorization from Raven Resonance Inc.
 
 See also [NOTICE](NOTICE) for a summary of what is covered by each license.
