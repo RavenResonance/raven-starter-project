@@ -1566,5 +1566,9 @@ if __name__ == "__main__":
 
 ## License
 
-This project is proprietary software. The Raven Framework code and documentation are proprietary and may not be redistributed, modified, or used except as expressly permitted by RavenResonance. Do not push the Raven Framework code to public repositories or distribute it without authorization.
+This repository's example applications and documentation are licensed under the [MIT License](LICENSE).
+
+The [Raven Framework](https://github.com/RavenResonance/raven-framework) is a separate proprietary dependency — see its [LICENSE](https://github.com/RavenResonance/raven-framework/blob/main/LICENSE). Do not redistribute or publish Raven Framework code without authorization from Raven Resonance, Inc.
+
+See [NOTICE](NOTICE) for a summary of what is covered by each license.
 
