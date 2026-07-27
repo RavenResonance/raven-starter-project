@@ -31,11 +31,13 @@ cd raven-starter-project
 python -m venv raven-app-venv
 ```
 
-**Note:** Use `python3` instead of `python` if needed on your system.
+**Note:** Use `python3` instead of `python` if needed (macOS/Linux). On Windows, if `python` doesn't work — it may open the Microsoft Store instead of running Python — use the `py` launcher instead: `py -m venv raven-app-venv`.
 
 **Step 5:** Activate the virtual environment:
 - **macOS/Linux:** `source raven-app-venv/bin/activate`
 - **Windows:** `raven-app-venv\Scripts\activate`
+
+**Windows note:** If PowerShell blocks activation with "running scripts is disabled on this system," you can skip activation entirely and call the venv's Python directly (see Step 7). Full details and fixes are in the Windows setup notes in [AGENTS.MD](AGENTS.MD#windows-setup-notes).
 
 **Step 6:** Clone the Raven Framework and install it:
 
@@ -64,7 +66,7 @@ This installs `simpleaudio` for audio playback in simulator mode. Note that `sim
 python main.py
 ```
 
-Or `python3 main.py` depending on your system.
+Or `python3 main.py` depending on your system. On **Windows**, if activation didn't work, run without activating by calling the venv's Python directly: `raven-app-venv\Scripts\python.exe main.py`.
 
 Now open the project in your editor of your choice like [VS Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/).
 
